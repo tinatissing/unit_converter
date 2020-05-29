@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+    <title>Baking Unit Converter</title>
+    
+    <style> 
+	
+	.orngType {
+		background-color: #FC0;
+	}
+	/*I gave the starting value with the starting unit of measurement of each row the class .orngType so I can style all of them the same way*/
+	h1 {
+		text-align: center;
+	}
+	/*I centered the h1 in the middle of the page. I cannot use margin-right/left because the text does not have a set width, so I must use tesxt=align: center.*/
+	table {
+		margin-right: auto;
+		margin-left: auto;
+	}
+	/*This is used to center my table (which has a set width).*/
+	
+	</style>
+    
+    <script>
+	
+	var ingName = [];
+	/*This is an array that stores the name of the ingredients that the use wishes to convert. I made these few arrays global because their values are needed throughout the entire code, not just one section/function.*/
+	var unitM = [];
+	/*This is an array that stores the units of measurement that each ingredient is initially measured in.*/
+	var quantity = [];
+	/*This is an array that stores the amount of each ingredient stored in the ingName[] array.*/
+
+	start();
+	
+	function start() {
+	//This function sets up the premise of the 'game'/program and gathers data needed for the rest of the code.
+	
+		var play = prompt("Would you like to 1. convert baking measurements, 2. display the table, or 3. end the program?");
+		//This propmts the user for what they wish to do. Depending on their answer, a function will be called or the code will stop running.
+		
+		if (play == "1" || play == "1." || play == "convert" || play == "Convert") {
+			var numItems = prompt ("How many items do you need to convert?");
+			/*This if statement runs different ccode depending on whether the user wishes to convert baking measurements, display the table, or end the program.*/
+		
+			while (isNaN(numItems) == true) {
+			/*If the user does not enter a number to be stored in the numItems prompt, this loop will continue to prompt them until they enter a number.*/
+				numItems = prompt ("How many items do you need to convert?");
+			}
+			
+			tabValue(numItems);
+			//Once the user enters in an appropriate value for numItems, we will send that value to the tabValue funtion and run that code.
+		}
+		else if (play == "2" || play == "2." || play == "display" || play == "Display") {
+			display();
+			//If the user chooses to display the table, it will automatically display the table with no conversion data in it.
+		}
+		else if (play == "3" || play == "3." || play == "End" || play == "end") {
+			//If the useer wishes to end the program, no more code will run and nothing will be displayed.
+		}
+		else { 
+			start();
+			//If the user does not enter a valid answer the start function will be called again and they will have to restart the program.
+		}
+	}
+	
+	function tabValue(numItems) {
+		/*The function tabValue is used to prompt the users for the values that will be stored in the arrays and eventually in the table. This function is recieving the value for variable numItems.*/
+		
+		var x = 0;
+		//This variable is used as a counter for the for loop
+		
+		for (x = 0; x < numItems; x++) {
+		/*This will loop while x is less than the number of items needed to convert so the user is prompted for ingredients, units of measure, and quantities for every item initially needed to be converted.*/
+		
+			ingName.push(prompt("Ingredient " + (x + 1) + ". What ingredient are you converting?"));
+			/*Every time this loops a new ingredient will be stored at the back of array ingName. (x + 1) is used to show the user what number ingredient they are on. I used x + 1 instead of x because the value of x is initially 0 not 1.*/
+			
+			var numInput =  prompt("Measurement " + (x + 1)  + ". What unit of measurement are you using? (cups/tbs/tsp/ml/fl. oz)");
+				if (numInput == "cups" || numInput == "Cups" || numInput == "cup" || numInput == "Cup" || numInput == "tbs" || numInput == "tsp" || numInput == "ml" || numInput == "mL" || numInput == "fl. oz" || numInput == "fl oz" || numInput == "fl.oz") {
+					unitM.push(numInput);
+					/*If the user puts in one of the options of units of measurements, that unit of measurement will be stored at the end of the unitM array.*/
+				}
+				else {
+					tabValue(numItems);
+					/*If the user does not input an appropriate unit of measurement, they will have to start over inserting their ingredients and units of measurements.*/
+				}
+			
+			numInput = prompt("Quantity " + (x + 1) + ". How much " + ingName[x] + " do you have?");
+			while (isNaN(numInput) == true) {
+				//This checks to make sure the user entered a number. If they don't they will be stuck in the loop and prompted until they do.
+				numInput = prompt("Quantity " + (x + 1) + ". How much " + ingName[x] + " do you have?")
+			}
+			quantity.push(numInput);
+			//Once they enter a number, this stores that number at the end of the quantity array.
+		}
+		start();
+		/*This will bring the user back to the start of the program and ask them if they want to convert again, display those stored values, or end the program.*/
+	}
+	
+	function display() {
+	//This function is used to display the table with the stored values.
+		document.write("<h1>Baking Conversion Table</h1>");
+		document.write("<table border ='1'>");
+		document.write("<tr><th colspan = '6'>Conversions!</th></tr>");
+		document.write("<tr><th> Ingredient </th><th> cup </th><th> tbs </th><th> tsp </th><th> mL </th><th> fl. oz </th></tr>");
+		
+		var y = 0; 
+		for (y = 0; y < ingName.length; y++) {
+		//This will loop for every ingredient there is stored in ingName.
+			document.write("<tr><td>" + ingName[y] + "</td>");
+			//This displays the ingredient name in the table
+			
+			if (unitM[y] == "cup" || unitM[y] == "Cup" || unitM[y] == "cups" || unitM[y] == "Cups") {
+			/*If the unit of measurement for the first ingredient is in cups, then this is the (math that goes down)conversion that needs to happen.*/
+				document.write("<td class='orngType'>" + quantity[y] + " </td><td>" + quantity[y]*16 + "</td><td>" + (quantity[y]*48) + "</td><td>" + (quantity[y]*240) + "</td><td>" + (quantity[y]*8) + "</td></tr>");
+			}
+			else if (unitM[y] == "tbs" || unitM[y] == "Tbs") {
+				document.write("<td>" + (quantity[y]/16) + "</td><td class = 'orngType'>" + quantity[y] + "</td><td>" + (quantity[y]*3) + "</td><td>" + (quantity[y]*15) + "</td><td>" + (quantity[y]/2) + "</td></tr>");
+			}
+			else if (unitM[y] == "tsp" || unitM[y] == "Tsp") {
+				document.write("<td>" + (quantity[y]/48) + " </td><td>" + (quantity[y]/3) + "</td><td class = 'orngType'>" + quantity[y] + "</td><td>" + (quantity[y]*5) + "</td><td>" + (quantity[y]/6) + "</td></tr>");
+			}
+			else if (unitM[y] == "ml" || unitM[y] == "Ml" || unitM[y] == "mL") {
+				document.write("<td>" + (quantity[y]/240) + " </td><td>" + (quantity[y]/15) + "</td><td>" + (quantity[y]/5) + "</td><td class = 'orngType'>" + quantity[y] + "</td><td>" + (quantity[y]/30) + "</td></tr>");
+			}
+			else if (unitM[y] == "fl. oz" || unitM[y] == "fl oz" || unitM[y] == "fl.oz") {
+				document.write("<td>" + (quantity[y]/8) + " </td><td>" + (quantity[y]*2) + "</td><td>" + (quantity[y]*6) + "</td><td>" + (quantity[y]*35) + "</td><td class = 'orngType'>" + quantity[y] + "</td></tr>");
+			}
+		}
+	}
+	
+	</script>
+</head>
+
+<body>
+</body>
+
+</html>
